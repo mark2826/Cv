@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>منشئ السيرة الذاتية الاحترافي | سهل وسريع</title>
+    
+    <!-- الخطوط والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- مكتبات PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- ملف الأنماط الخارجي -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-header">
+    <h2><i class="fas fa-file-alt"></i> منشئ السيرة الذاتية الاحترافي</h2>
+</div>
+
+<div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchPane('edit', this)"><i class="fas fa-pen-alt"></i> البيانات</button>
+    <button class="tab-btn" onclick="switchPane('preview', this)"><i class="fas fa-eye"></i> المعاينة</button>
+</div>
+
+<div id="edit-pane" class="pane active">
+    <div class="card">
+        <h3><i class="fas fa-user"></i> المعلومات الشخصية</h3>
+        <input type="text" id="fn" placeholder="الاسم الكامل" oninput="updateAll()">
+        <input type="text" id="jt" placeholder="المسمى الوظيفي" oninput="updateAll()">
+        <input type="text" id="ph" placeholder="رقم الهاتف" oninput="updateAll()">
+        <input type="text" id="em" placeholder="البريد الإلكتروني" oninput="updateAll()">
+        <input type="text" id="ad" placeholder="العنوان" oninput="updateAll()">
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-align-right"></i> الملخص المهني والخبرات السابقة </h3>
+        <textarea id="sum" rows="4" placeholder="نبذة عن مهاراتك وخبراتك..." oninput="updateAll()"></textarea>
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-briefcase"></i> الخبرات العملية</h3>
+        <div id="exp-list"></div>
+        <button class="add-btn" onclick="addEntry('exp-list', 'المسمى الوظيفي', 'الشركة والمدة والوصف')"><i class="fas fa-plus-circle"></i> إضافة خبرة</button>
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-graduation-cap"></i> التعليم</h3>
+        <div id="edu-list"></div>
+        <button class="add-btn" onclick="addEntry('edu-list', 'الشهادة', 'الجامعة والسنة')"><i class="fas fa-plus-circle"></i> إضافة تعليم</button>
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-code"></i> المهارات</h3>
+        <div id="skills-list"></div>
+        <button class="add-btn" onclick="addEntry('skills-list', 'المهارة', 'المستوى (مبتدئ/متوسط/خبير)')"><i class="fas fa-plus-circle"></i> إضافة مهارة</button>
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-language"></i> اللغات</h3>
+        <div id="langs-list"></div>
+        <button class="add-btn" onclick="addEntry('langs-list', 'اللغة', 'المستوى (مكتوب/محادثة)')"><i class="fas fa-plus-circle"></i> إضافة لغة</button>
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-link"></i> المواقع والسوشال ميديا</h3>
+        <div id="social-list"></div>
+        <button class="add-btn" onclick="addEntry('social-list', 'اسم المنصة', 'الرابط الكامل')"><i class="fas fa-plus-circle"></i> إضافة رابط</button>
+    </div>
+</div>
+
+<div id="preview-pane" class="pane">
+    <div class="cv-scaler" id="cvScaler">
+        <div id="cv-paper">
+            <div class="cv-name" id="p-fn">الاسم الكامل</div>
+            <div class="cv-title" id="p-jt">المسمى الوظيفي</div>
+            <div class="cv-contact" id="p-con">الهاتف | البريد | العنوان</div>
+            <div id="p-sum-area"></div>
+            <div id="p-exp-area"></div>
+            <div id="p-edu-area"></div>
+            <div id="p-skills-area"></div>
+            <div id="p-langs-area"></div>
+            <div id="p-social-area"></div>
+        </div>
+    </div>
+</div>
+
+<div class="actions-bar">
+    <button class="btn-action" onclick="exportPDF()"><i class="fas fa-download"></i> PDF</button>
+    <button class="btn-action clear" onclick="resetAll()"><i class="fas fa-trash-alt"></i> مسح</button>
+    <button class="btn-action about" onclick="openModal()"><i class="fas fa-info-circle"></i> عن المطور</button>
+</div>
+
+<!-- النافذة المنبثقة -->
+<div id="developerModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h3><i class="fas fa-laptop-code"></i> المطور</h3>
+        <div class="dev-title">Professor-X</div>
+        <p> سيرة ذاتية احترافية • تصميم عصري وسريع</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/professorx_963?igsh=MXdyNW5zZW4xbDdreA==" target="_blank" class="social-link-item">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+            <a href="https://www.facebook.com/professorx.sy" target="_blank" class="social-link-item">
+                <i class="fab fa-facebook"></i> Facebook
+            </a>
+            <a href="https://t.me/professor_x_000" target="_blank" class="social-link-item">
+                <i class="fab fa-telegram"></i> Telegram
+            </a>
+        </div>
+        <hr>
+        <div class="usdt-box" onclick="copyUSDT()">
+            <i class="fab fa-usdt"></i>
+            <span class="usdt-address" id="usdtAddress">ff60c104c50588ef756143194bc6d3ee</span>
+            <i class="fas fa-copy"></i>
+        </div>
+        <div class="copy-notice">🔹ادعمنا عبر شام كاش 💸</div>
+    </div>
+</div>
+
+<!-- ملف الجافاسكريبت الخارجي -->
+<script src="script.js"></script>
+</body>
+</html>
