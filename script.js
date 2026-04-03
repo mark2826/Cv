@@ -119,7 +119,7 @@ window.onclick = function(e) { if(e.target === document.getElementById('develope
 function copyUSDT() {
     const address = document.getElementById('usdtAddress').innerText;
     navigator.clipboard.writeText(address).then(() => {
-        showToast("✅ تم نسخ عنوان USDT إلى الحافظة");
+        showToast("✅ تم نسخ عنوان شام كاش إلى الحافظة");
     }).catch(() => alert("حدث خطأ في النسخ"));
 }
 
